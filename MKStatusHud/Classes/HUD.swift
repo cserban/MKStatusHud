@@ -15,6 +15,7 @@ public enum Animation {
 open class HUD {
     
     var container:MKStatusHudView!
+    let blurVisualEffectView = UIVisualEffectView(effect: UIBlurEffect(style: .light))
     var progressTime:((Double)->Void)? = nil
     var progress:Double = 0
     var mDispatchWorkItem: DispatchWorkItem?
@@ -53,6 +54,13 @@ open class HUD {
         container.statusImage.image = image
         container.title.text = title
         container.subtitle.text = subtitle
+        blurVisualEffectView.frame = view.bounds
+        
+        container.layer.shadowColor = UIColor.init(white: 0.0, alpha: 0.35).cgColor
+        container.layer.shadowOpacity = 1
+        container.layer.shadowOffset = CGSize(width: 0, height: 2.0)
+        container.layer.shadowRadius = 4
+        view.addSubview(blurVisualEffectView)
         view.addSubview(container)
         
       //ADD constraints
@@ -225,6 +233,7 @@ open class HUD {
             self?.internal_completion = nil
             self?.animationCompletion = nil
             self?.container.removeFromSuperview()
+            self?.blurVisualEffectView.removeFromSuperview()
             self?.timer?.invalidate()
             self?.progressTime = nil
             self?.animation?.stop()
